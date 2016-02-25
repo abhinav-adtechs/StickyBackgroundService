@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 public class BackgroundService extends Service{
@@ -33,6 +34,8 @@ public class BackgroundService extends Service{
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+
+        Log.d(TAG, "Method onBind") ;
         return null;
     }
 
@@ -40,6 +43,7 @@ public class BackgroundService extends Service{
     public void onCreate() {
         super.onCreate();
 
+        Log.d(TAG, "Method onCreate") ;
         intent = new Intent(this, MainActivity.class) ;
         pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT) ;
 
@@ -50,11 +54,13 @@ public class BackgroundService extends Service{
     @Override
     public void onRebind(Intent intent) {
         super.onRebind(intent);
+        Log.d(TAG, "Method onRebind") ;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Method onStartCommand") ;
 
         notificationManager.notify(mNotificationId, builder.build());
 
@@ -65,6 +71,7 @@ public class BackgroundService extends Service{
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
+        Log.d(TAG, "Method onConfigurationChanged") ;
         builder.setContentText("Service Still Running").setOngoing(false).setNumber(num++) ;
         notificationManager.notify(mNotificationId, builder.build());
     }
@@ -72,6 +79,8 @@ public class BackgroundService extends Service{
     @Override
     public void onDestroy() {
         Toast.makeText(this, "Service Destroyed", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Method onDestroy") ;
+
         builder.setContentText("Service Destroyed").setOngoing(false).setNumber(num++) ;
         notificationManager.notify(mNotificationId, builder.build());
 
