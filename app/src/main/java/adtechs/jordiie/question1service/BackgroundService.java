@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -61,12 +62,20 @@ public class BackgroundService extends Service{
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        builder.setContentText("Service Still Running").setOngoing(false).setNumber(num++) ;
+        notificationManager.notify(mNotificationId, builder.build());
+    }
+
+    @Override
     public void onDestroy() {
         Toast.makeText(this, "Service Destroyed", Toast.LENGTH_SHORT).show();
         builder.setContentText("Service Destroyed").setOngoing(false).setNumber(num++) ;
         notificationManager.notify(mNotificationId, builder.build());
 
-        sendBroadcast(new Intent("LetMeLive"));
+        sendBroadcast(new Intent("RestartService"));
 
         super.onDestroy();
     }
